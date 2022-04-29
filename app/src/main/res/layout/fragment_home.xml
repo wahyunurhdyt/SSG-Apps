@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="id.semisama.app.ui.navigation.home.ViewModelHome" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srlLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/splash_screen"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/border_gray"
+                android:drawablePadding="10dp"
+                android:paddingVertical="8dp"
+                android:paddingStart="16dp"
+                android:text="@string/labelSearch"
+                android:textColor="@color/black_50"
+                android:textSize="12sp"
+                android:onClick="@{viewModel::onClickedSearch}"
+                app:drawableStartCompat="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/ic_notification"
+                app:layout_constraintBottom_toBottomOf="@+id/tvSearch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvSearch"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@{viewModel.city}"
+                app:layout_constraintBottom_toBottomOf="@+id/tvChangeCity"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvChangeCity"
+                tools:text="Kota Jakarta Pusat " />
+
+            <TextView
+                android:id="@+id/tvChangeCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:onClick="@{viewModel.onClickChangeLocation}"
+                app:layout_constraintStart_toEndOf="@+id/tvCity"
+                app:layout_constraintTop_toBottomOf="@+id/tvSearch"
+                android:text="@string/labelChangeLocation"/>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/svMain"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvChangeCity"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:descendantFocusability="blocksDescendants">
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/vpBanner"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginHorizontal="32dp"
+                            app:layout_constraintDimensionRatio="H, 2:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/llContainerBannerIndicator"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="@+id/vpBanner"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:ignore="UselessLeaf" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cvMap"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_marginTop="32dp"
+                            android:visibility="@{viewModel.requestLocationVisibility, default=gone}"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="4dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/vpBanner">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <id.semisama.app.utilily.CustomMapView
+                                    android:id="@+id/mvMain"
+                                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="180dp"
+                                    android:background="@color/white_700"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="16dp"
+                                    android:text="@string/labelKurirFromSemiSama"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/black_100"
+                                    android:textStyle="bold"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="16dp"
+                                    android:layout_marginTop="8dp"
+                                    android:text="@string/labelMapsDesc"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/black_70"
+                                    android:textStyle="bold"/>
+
+                                <Button
+                                    android:layout_width="180dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/labelRequest"
+                                    android:onClick="@{viewModel.onClickedRequestLocation}"
+                                    android:layout_gravity="center"
+                                    android:layout_marginVertical="20dp"
+                                    android:textColor="@android:color/white"
+                                    android:textAllCaps="false"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp"/>
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:id="@+id/labelCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/labelProductCategory"
+                            android:textSize="14sp"
+                            android:textColor="@color/black_100"
+                            android:textStyle="bold"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_marginTop="28dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cvMap"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvCategory"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="12dp"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            android:paddingEnd="30dp"
+                            android:paddingBottom="8dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/labelCategory"
+                            tools:itemCount="10"
+                            tools:listitem="@layout/item_category"
+                            tools:ignore="RtlSymmetry" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/labelSsg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_marginTop="28dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/rvCategory">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/labelSsgChoiceProduct"
+                                android:textSize="14sp"
+                                android:textColor="@color/black_100"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/labelSeeAll"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:onClick="@{viewModel.onClickedViewAllProduct}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvProducts"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginHorizontal="32dp"
+                            android:clipToPadding="false"
+                            android:paddingBottom="16dp"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:spanCount="2"
+                            tools:itemCount="5"
+                            tools:listitem="@layout/item_product"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/labelSsg"/>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/labelRecomend"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_marginTop="28dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/rvProducts">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/labelRecommendProduct"
+                                android:textSize="14sp"
+                                android:textColor="@color/black_100"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/labelSeeAll"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:onClick="@{viewModel.onClickedViewAllProductRecommend}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvRecommends"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginHorizontal="32dp"
+                            android:clipToPadding="false"
+                            android:paddingBottom="16dp"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:spanCount="2"
+                            tools:itemCount="5"
+                            tools:listitem="@layout/item_product"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/labelRecomend"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <View
+                android:id="@+id/vPlaceHolder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/white"
+                android:visibility="@{viewModel.loadingVisibility, default=gone}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSearch"/>
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sflMain"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="@{viewModel.loadingVisibility, default=gone}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSearch"
+                app:shimmer_auto_start="true"
+                app:shimmer_repeat_mode="restart">
+
+            <include layout="@layout/shimmer_home" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <include
+                android:id="@+id/layoutEmpty"
+                layout="@layout/error_connection"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:visibility="@{viewModel.connectionErrorVisibility}"
+                app:onClickRefresh="@{viewModel.onClickRefresh}"/>
+
+            <include
+                layout="@layout/dialog_check_location"
+                app:visibility="@{viewModel.loadingCheckLocationVisibility}"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

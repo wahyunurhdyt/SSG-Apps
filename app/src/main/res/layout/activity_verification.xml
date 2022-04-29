@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.auth.verification.ActivityVerification">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="id.semisama.app.ui.auth.verification.ViewModelVerification" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/include"
+            app:title="@={viewModel.title}"
+            app:onNavigationBackClick="@{viewModel.onClickedUpButton}"
+            layout="@layout/toolbar" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/labelInputCodeVerification"
+                android:textColor="@color/black_100"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSendEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/labelSendToEmail"
+                android:textColor="@color/black_90"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/labelCheckEmail"
+                android:textColor="@color/black_90"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+
+            <com.chaos.view.PinView
+                android:id="@+id/pinView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:cursorVisible="true"
+                android:layout_gravity="center"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:itemHeight="36dp"
+                app:itemWidth="36dp"
+                app:itemCount="6"
+                app:lineColor="@color/line_colors"
+                app:itemSpacing="12dp"
+                style="@style/PinWidget.PinView"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labelCodeExpiresIn"
+                    android:textColor="@color/black_50"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/tvCountDown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:textColor="@color/gold"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    tools:ignore="RtlSymmetry"
+                    tools:text="60 detik" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:enabled="@{viewModel.isButtonEnabled, default=false}"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:onClick="@{viewModel::onClickedVerification}"
+                android:text="@string/labelNextVerified"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvResendCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/labelDidntGetEmail"
+                android:textColor="@color/black_70"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/dialog_loading"
+            app:visibility="@{viewModel.loadingVisibility}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

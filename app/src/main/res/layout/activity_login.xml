@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.auth.login.ActivityLogin">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="id.semisama.app.ui.auth.login.ViewModelLogin" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel::onClickedRegister}"
+                android:text="@string/labelRegister"
+                android:textSize="16sp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="end"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/apps_name"
+                android:textColor="@color/black_100"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/labelLoginDescription"
+                android:textColor="@color/black_90"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                android:text="@string/labelEmail"
+                android:textColor="@color/black_70"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false"
+                app:error="@{viewModel.emailError}"
+                app:errorEnabled="@{viewModel.emailError != null}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/labelHintEmail"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="50"
+                    android:singleLine="true"
+                    android:text="@={viewModel.email}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/labelPassword"
+                android:textColor="@color/black_70"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false"
+                app:error="@{viewModel.passwordError}"
+                app:errorEnabled="@{viewModel.passwordError != null}"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/labelHintPassword"
+                    android:inputType="textPassword"
+                    android:maxLength="50"
+                    android:singleLine="true"
+                    android:text="@={viewModel.password}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{viewModel::onClickedForgotPassword}"
+                android:text="@string/labelForgotPassword"
+                android:textSize="12sp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="end"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:enabled="@{viewModel.isButtonEnabled, default=false}"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:onClick="@{viewModel::onClickedLogin}"
+                android:text="@string/labelLogin"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+            
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/white_400"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvOption"
+                    app:layout_constraintEnd_toStartOf="@+id/tvOption"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvOption" />
+
+                <TextView
+                    android:id="@+id/tvOption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labelLoginOption"
+                    android:textSize="12sp"
+                    android:textColor="@color/white_700"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@color/white_400"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvOption"
+                    app:layout_constraintStart_toEndOf="@+id/tvOption"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvOption" />
+                
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/loginGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/border_login_google"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:drawablePadding="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingVertical="16dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/labelLoginGoogle"
+                    android:textSize="14sp"
+                    app:drawableLeftCompat="@drawable/ic_google_login"/>
+            </LinearLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvTryApp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/labelTryApp"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/black_70"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/dialog_loading"
+            app:visibility="@{viewModel.loadingVisibility}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
