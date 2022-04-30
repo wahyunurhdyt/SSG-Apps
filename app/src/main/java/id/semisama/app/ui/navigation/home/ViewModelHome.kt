@@ -3,6 +3,7 @@ package id.semisama.app.ui.navigation.home
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.model.LatLng
 import id.semisama.app.api.data.*
 import id.semisama.app.api.manager.ManagerRepository
 import id.semisama.app.api.util.ApiException
@@ -23,6 +24,7 @@ class ViewModelHome(
     val banners = MutableLiveData<MutableList<Banner>>()
     val categories = MutableLiveData<MutableList<Category>>()
     val routes = MutableLiveData<ResponseRoute>()
+    val driverLocation = MutableLiveData(LatLng(0.0,0.0))
     val product = MutableLiveData<ResponseProducts>()
     val productRecommend = MutableLiveData<ResponseProducts>()
     val city = MutableLiveData(tempAddress)

@@ -144,7 +144,14 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             categories.observe(owner, {
                 showCategory(it)
             })
-
+            driverLocation.observe(owner, {
+                if (viewModel.routes.value != null) {
+                    loadRoute(it, viewModel.routes.value?.data!!)
+                }
+            })
+            routes.observe(owner, {
+                loadRoute(viewModel.driverLocation.value!!, it.data)
+            })
         }
     }
 
@@ -348,7 +355,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                     val lng = message.location.coordinates!![0]
                     val driverLocation = LatLng(lat, lng)
                     if (viewModel.routes.value != null){
-                        loadRoute(driverLocation, viewModel.routes.value?.data!!)
+                        viewModel.driverLocation.postValue(driverLocation)
                     }
                     println("location driver : $lat, $lng")
                 } catch (e: JSONException) {

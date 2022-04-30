@@ -106,7 +106,7 @@
         <item>Silahkan nikmati pelayanan dari kami, dan milikilah trend hidup sehat dari aplikasi ini.</item>
     </string-array>
     <string-array name="labelInfoUnavailabelLocation">
-        <item>Kami ingin mengabarkan kabar bahwa lokasi anda sudah belum mendapatkan akses pelayanan</item>
+        <item>Kami ingin mengabarkan kabar bahwa lokasi anda belum mendapatkan akses pelayanan</item>
         <item>Silahkan pilih area yang kami support dengan memilih lokasi terdekat dari anda.</item>
     </string-array>
 
