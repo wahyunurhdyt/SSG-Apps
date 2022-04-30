@@ -88,15 +88,7 @@ class ViewModelHome(
                 bridge?.setLocation(true, response!!, null)
                 loadingCheckLocationVisibility.postValue(View.GONE)
             } catch (e: ApiException) {
-                when (e.code) {
-                    BaseResponse.CODE_LOCATION_NOT_SUPPORTED -> {
-                        getRegencies()
-                    }
-                    else -> {
-                        bridge?.showSnackbar(e.message)
-                        loadingCheckLocationVisibility.postValue(View.GONE)
-                    }
-                }
+                getRegencies()
             } catch (e: ConnectionException) {
                 bridge?.showSnackbarLong(e.message)
                 loadingCheckLocationVisibility.postValue(View.GONE)

@@ -75,8 +75,12 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
 
     override fun onResume() {
         super.onResume()
+        fetchLocation()
         currentActivity = home
-        if(::binding.isInitialized) binding.mvMain.onResume()
+        if(::binding.isInitialized) {
+            binding.mvMain.onResume()
+            checkLocation()
+        }
     }
 
     override fun onDestroyView() {
