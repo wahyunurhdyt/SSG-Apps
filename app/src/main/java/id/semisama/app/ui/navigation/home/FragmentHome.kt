@@ -289,16 +289,21 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 viewModel.checkLocation()
             }
         }else{
-            if (tempRegion?.isSupported!! && tempAuth != null){
-                viewModel.requestLocationVisibility.postValue(View.VISIBLE)
-                viewModel.getRoutes()
-                receivedMessageFromSocket()
+            if (stateCheckLocation) {
+                if (tempRegion?.isSupported!! && tempAuth != null) {
+                    viewModel.requestLocationVisibility.postValue(View.VISIBLE)
+                    viewModel.getRoutes()
+                    receivedMessageFromSocket()
+                } else {
+                    viewModel.requestLocationVisibility.postValue(View.GONE)
+                }
+                viewModel.loadingCheckLocationVisibility.postValue(View.GONE)
+                viewModel.getProductSelected()
+                viewModel.getProductRecommend()
             }else{
-                viewModel.requestLocationVisibility.postValue(View.GONE)
+                stateCheckLocation = true
+                viewModel.checkLocation()
             }
-            viewModel.loadingCheckLocationVisibility.postValue(View.GONE)
-            viewModel.getProductSelected()
-            viewModel.getProductRecommend()
         }
     }
 
@@ -380,17 +385,16 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             Application.getContext(),
             R.drawable.driver
         )) as BitmapDrawable).bitmap
-        val markerIcon = Bitmap.createScaledBitmap(driverMarker, 96, 96, false)
+        val driverIcon = Bitmap.createScaledBitmap(driverMarker, 96, 96, false)
         map?.addMarker(
             MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
+                .icon(BitmapDescriptorFactory.fromBitmap(driverIcon))
                 .position(driverLocation)
                 .title("Posisi Driver")
         )
 
-
         val builder = LatLngBounds.Builder()
-
+        builder.include(driverLocation)
         val size = data.size
 
         val bitmap = ((ContextCompat.getDrawable(
@@ -413,6 +417,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             map?.addMarker(
                 MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
+                    .snippet((i+1).toString())
                     .position(position)
                     .title(name)
             )
@@ -469,9 +474,13 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 textInputLayout.visibility = View.GONE
                 btnConfirm.isEnabled = true
                 cache.set(regionTemps, Region(data?.name, data?.id, isSupported))
-                viewModel.requestLocationVisibility.postValue(View.VISIBLE)
-                viewModel.getRoutes()
-                receivedMessageFromSocket()
+                if (tempAuth != null) {
+                    viewModel.requestLocationVisibility.postValue(View.VISIBLE)
+                    viewModel.getRoutes()
+                    receivedMessageFromSocket()
+                }else{
+                    viewModel.requestLocationVisibility.postValue(View.GONE)
+                }
             }else{
                 tvInfo.text = Application.getStringArray(R.array.labelInfoUnavailabelLocation)[0]
                 tvInfo.append(appName)

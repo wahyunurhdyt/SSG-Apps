@@ -8,7 +8,9 @@ import id.semisama.app.api.data.*
 import id.semisama.app.api.manager.ManagerRepository
 import id.semisama.app.api.util.ApiException
 import id.semisama.app.api.util.ConnectionException
+import id.semisama.app.base.Application
 import id.semisama.app.base.BaseResponse
+import id.semisama.app.ui.auth.login.ActivityLogin
 import id.semisama.app.ui.product.search.ActivitySearch
 import id.semisama.app.utilily.*
 
@@ -66,7 +68,12 @@ class ViewModelHome(
                 managerRepository.repositoryRegion.requestLocation()
                 bridge?.showSnackbarLong("Terima Kasih Sudah Melakukan Request")
             } catch (e: ApiException) {
-                bridge?.showSnackbar(e.message)
+                when {
+                    e.message?.contains("token") == true -> {
+                        Application.getContext().launchNewActivity(ActivityLogin::class.java)
+                    }
+                    else -> bridge?.showSnackbar(e.message)
+                }
             } catch (e: ConnectionException) {
                 bridge?.showSnackbarLong(e.message)
             }

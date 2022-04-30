@@ -16,6 +16,7 @@ var tempProductId: String? = null
 var tempCategoryName: String? = null
 var tempFragmenHasLoadedData: Boolean = false
 var tempTokenResetPassword = ""
+var stateCheckLocation = false
 
 var tempID: String = ""
 var tempDeviceID: String = ""
