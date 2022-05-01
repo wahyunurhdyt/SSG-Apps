@@ -169,16 +169,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 
     //PinView
-    implementation 'com.chaos.view:pinview:1.4.4'
+    implementation 'io.github.chaosleung:pinview:1.4.4'
 
     //Kodein DI
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.5.0'
     implementation 'org.kodein.di:kodein-di-framework-android-x:6.5.0'
 
-    //Socket
     // Socket IO
     implementation ('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
+
+    //Image picker
+    implementation "com.github.dhaval2404:imagepicker:2.1"
 
 }

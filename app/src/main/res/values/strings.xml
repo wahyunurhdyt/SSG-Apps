@@ -196,4 +196,10 @@
         <item>Sesi sudah habis, coba lagi nanti</item>
         <item>Permintaan melebihi batas, mohon coba lagi dalam 15 menit</item>
     </string-array>
+    <string name="labelChooseImage">Pilih Gambar</string>
+    <string-array name="labelChooseImages">
+        <item>Galeri</item>
+        <item>Ambil Gambar</item>
+    </string-array>
+    <string name="failedProcessingImage">Gagal memproses gambar, harap coba lagi nanti</string>
 </resources>

@@ -65,10 +65,12 @@
         <entry key="..\:/Data Wayy/Project/SSG/app/src/main/res/menu/home_menu.xml" value="0.184375" />
         <entry key="..\:/Data Wayy/Project/SSG/app/src/main/res/menu/navigation_menu.xml" value="0.5" />
         <entry key="..\:/Data Wayy/Project/SSG/app/src/main/res/xml/file_paths.xml" value="0.209375" />
+        <entry key="..\:/Users/hhiza/Documents/AndroidStudio/SSG-Apps/app/src/main/res/layout/activity_register.xml" value="0.3625" />
+        <entry key="..\:/Users/hhiza/Documents/AndroidStudio/SSG-Apps/app/src/main/res/layout/fragment_profile.xml" value="0.33611111111111114" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

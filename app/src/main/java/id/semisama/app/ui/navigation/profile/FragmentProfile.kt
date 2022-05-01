@@ -121,16 +121,16 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
 
     private fun initObserver() {
         viewModel.apply {
-            user.observe(viewLifecycleOwner, {
+            user.observe(viewLifecycleOwner) {
                 city.postValue(tempAddress)
-                if (it.image.isNullOrEmpty()){
+                if (it.image.isNullOrEmpty()) {
                     textInitial.postValue(getInitialName())
-                }else {
+                } else {
                     textInitial.value = ""
                     binding.ivProfilePic.loadImageFromLink(baseUrlImageUser + it.image)
                 }
                 checkUser(it)
-            })
+            }
         }
     }
 

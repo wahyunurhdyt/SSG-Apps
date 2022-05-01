@@ -3,6 +3,7 @@ package id.semisama.app.ui.person.edit
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import id.semisama.app.R
 import id.semisama.app.api.data.User
 import id.semisama.app.api.manager.ManagerRepository
@@ -12,6 +13,7 @@ import id.semisama.app.base.Application
 import id.semisama.app.utilily.Coroutines
 import id.semisama.app.utilily.isValidPhoneNumber
 import id.semisama.app.utilily.tempAuth
+import kotlinx.coroutines.launch
 
 class ViewModelEdit(
     private val managerRepository: ManagerRepository
@@ -41,6 +43,25 @@ class ViewModelEdit(
     val isChangedEmail = MutableLiveData(false)
     val isButtonEnabled = MutableLiveData(false)
     val loadingVisibility = MutableLiveData(View.GONE)
+
+    fun uploadUserImage(image: String?) {
+        isLoading = true
+        loadingVisibility.postValue(View.VISIBLE)
+        viewModelScope.launch {
+            try {
+                managerRepository.repositoryPerson.patchImage(image)
+                user.postValue(managerRepository.repositoryPerson.getUser()?.data)
+                bridge?.showSnackbar(Application.getString(R.string.labelSuccessChangePicture))
+            } catch (e: ApiException) {
+                bridge?.showSnackbar(e.message)
+            } catch (e: ConnectionException) {
+                bridge?.showSnackbarLong(e.message)
+            } finally {
+                isLoading = false
+                loadingVisibility.postValue(View.GONE)
+            }
+        }
+    }
 
     fun checkButton() {
         val nameOk = isNameOk()
@@ -163,24 +184,6 @@ class ViewModelEdit(
 
     val onClickChangePicture = View.OnClickListener{
         bridge?.changePicture()
-    }
-
-    fun patchImage(image: String){
-        isLoading = true
-        loadingVisibility.postValue(View.VISIBLE)
-        Coroutines.main {
-            try {
-                user.postValue(managerRepository.repositoryPerson.patchImage(image)?.data)
-                bridge?.showSnackbar(Application.getString(R.string.labelSuccessChangePicture))
-            } catch (e: ApiException) {
-                bridge?.showSnackbar(e.message)
-            } catch (e: ConnectionException) {
-                bridge?.showSnackbarLong(e.message)
-            } finally {
-                isLoading = false
-                loadingVisibility.postValue(View.GONE)
-            }
-        }
     }
 
     interface Bridge {
