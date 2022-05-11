@@ -120,6 +120,24 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
+                android:layout_width="200dp"
+                android:layout_height="14dp"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/black_70"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="14dp"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black_70"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
                 android:id="@+id/vText2"
                 android:layout_width="150dp"
                 android:layout_height="16dp"

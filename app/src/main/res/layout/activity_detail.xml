@@ -158,6 +158,26 @@
                     android:textColor="@color/black_70"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="4dp"
+                    tools:text="Ini adalah cara penyimpanan"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labelStock"
+                    android:textSize="12sp"
+                    android:textColor="@color/black_70"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.productDetail.data.stockQuantity.toString()}"
+                    android:textSize="12sp"
+                    android:textColor="@color/black_70"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginBottom="22dp"
                     tools:text="Ini adalah cara penyimpanan"/>
 
@@ -195,8 +215,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 
         <View
             android:id="@+id/vPlaceHolder"
@@ -237,8 +255,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:visibility="@{viewModel.connectionErrorVisibility}"
             app:onClickRefresh="@{viewModel.onClickRefresh}"/>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

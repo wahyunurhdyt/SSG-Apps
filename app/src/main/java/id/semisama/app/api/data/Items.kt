@@ -24,6 +24,8 @@ data class Product(
     var description: String?,
     var nutritionBenefit: String?,
     var storageMethod: String?,
+    var stockQuantity: Long?,
+    var stockType: String?,
     var price: Long?,
     var unit: Unit?,
     var categories: Category?,
