@@ -41,6 +41,7 @@ class ViewModelProfile(
                 bridge?.logout()
             } catch (e: ApiException) {
                 bridge?.showSnackbar(e.message)
+                bridge?.logout()
             } catch (e: ConnectionException) {
                 bridge?.showSnackbarLong(e.message)
             } finally {

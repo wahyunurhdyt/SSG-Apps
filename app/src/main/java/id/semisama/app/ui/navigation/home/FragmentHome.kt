@@ -312,27 +312,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     }
 
     private fun receivedMessageFromSocket(){
-        val token = tempAuth?.tokens?.access?.token
-        val options = IO.Options()
-        options.reconnection = true
-        options.forceNew = true
-
-        Log.d("TOKEN", token!!)
-
-        if (token.isEmpty()) {
-            val headers: Map<String, List<String>> = mutableMapOf(
-                Pair("X-Api-Key", listOf(BuildConfig.API_KEY)),
-            )
-            options.extraHeaders = headers
-        } else {
-            val headers: Map<String, List<String>> = mutableMapOf(
-                Pair("X-Api-Key", listOf(BuildConfig.API_KEY)),
-                Pair("Authorization", listOf("Bearer $token")),
-            )
-            options.extraHeaders = headers
-        }
-
-        socket = IO.socket("https://io.dev.semisama.id", options)
+        socket = IO.socket("https://io.dev.semisama.id")
 
         val region = SocketRegion(tempRegion?.id)
 
@@ -480,8 +460,6 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 cache.set(regionTemps, Region(data?.name, data?.id, isSupported))
                 if (tempAuth != null) {
                     viewModel.requestLocationVisibility.postValue(View.VISIBLE)
-                    viewModel.getRoutes()
-                    receivedMessageFromSocket()
                 }else{
                     viewModel.requestLocationVisibility.postValue(View.GONE)
                 }
@@ -522,6 +500,9 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 viewModel.city.postValue(tempAddress)
                 viewModel.getProductSelected()
                 viewModel.getProductRecommend()
+
+                viewModel.getRoutes()
+                receivedMessageFromSocket()
                 dialog.dismiss()
             }
         }
