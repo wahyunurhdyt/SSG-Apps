@@ -46,10 +46,16 @@ class ActivityBoarding : BaseActivity() {
             image.setImageResource(item.image)
             btnNext.setOnClickListener {
                 if (position == 2) {
+                    if (haveLocationPermissions()) {
+                        fetchLocation()
+                    }
                     cache.set(boardingTemps, "true")
                     launchNewActivity(ActivityNavigation::class.java)
                     finish()
                 } else {
+                    if (haveLocationPermissions()) {
+                        fetchLocation()
+                    }
                     vpBanner.currentItem = position + 1
                 }
             }
