@@ -43,19 +43,19 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
 
     override fun onStart() {
         super.onStart()
-        if (tempAuth == null){
+        if (tempAuth == null) {
             when (currentActivity) {
                 login -> {
                     requireActivity().onBackPressed()
                 }
                 resetPassword -> {
-                    context?.launchNewActivity(ActivityPassword::class.java)
+                    requireContext().launchNewActivity(ActivityPassword::class.java)
                 }
                 else -> {
-                    context?.launchNewActivity(ActivityLogin::class.java)
+                    requireContext().launchNewActivity(ActivityLogin::class.java)
                 }
             }
-        }else{
+        } else {
             binding.loadingView.visibility = View.GONE
             viewModel.user.postValue(tempAuth?.user!!)
         }
@@ -94,7 +94,7 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
                 val required = itemView.findViewById<TextView>(R.id.tvRequiredAction)
                 title.text = item.title
                 icon.setImageResource(item.icon)
-                if (!item.isRequired){
+                if (!item.isRequired) {
                     required.text = ""
                 }
             },
@@ -102,17 +102,17 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
                 when (item.title) {
                     resources.getStringArray(R.array.labelProfileMenu)[0] -> {
                         currentActivity = createPassword
-                        context?.launchNewActivity(ActivityPassword::class.java)
+                        requireContext().launchNewActivity(ActivityPassword::class.java)
                     }
                     resources.getStringArray(R.array.labelProfileMenu)[1] -> {
                         currentActivity = editPassword
-                        context?.launchNewActivity(ActivityPassword::class.java)
+                        requireContext().launchNewActivity(ActivityPassword::class.java)
                     }
                     resources.getStringArray(R.array.labelProfileMenu)[2] -> {
-                        context?.launchNewActivity(ActivityVerification::class.java)
+                        requireContext().launchNewActivity(ActivityVerification::class.java)
                     }
                     else -> {
-                        context?.toast(item.title)
+                        requireContext().toast(item.title)
                     }
                 }
             })
@@ -134,19 +134,19 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
         }
     }
 
-    private fun checkUser(user: User){
+    private fun checkUser(user: User) {
         adapter.data = getProfileMenu()
-        if (user.isSetPassword!!){
+        if (user.isSetPassword!!) {
             adapter.deletePosition(0)
-        }else{
+        } else {
             adapter.deletePosition(1)
         }
-        if (user.isVerifiedEmail!!){
+        if (user.isVerifiedEmail!!) {
             adapter.deletePosition(1)
-        }else{
+        } else {
             if (currentActivity == registration) {
                 currentActivity = profile
-                context?.launchNewActivity(ActivityVerification::class.java)
+                requireContext().launchNewActivity(ActivityVerification::class.java)
             }
         }
         currentActivity = profile
@@ -158,8 +158,8 @@ class FragmentProfile : BaseFragment(), ViewModelProfile.Bridge {
         }
         ManagerFirebase.deleteToken()
         cache.delete(authTemps)
-        context?.toast(getString(R.string.labelSuccessLogout))
-        context?.launchNewActivity(ActivityLogin::class.java)
+        requireContext().toast(getString(R.string.labelSuccessLogout))
+        onStart()
     }
 
     override fun showLogoutDialog() {

@@ -1,8 +1,8 @@
 package id.semisama.app.ui.auth.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
+import id.semisama.app.ActivitySplashScreen
 import id.semisama.app.R
 import id.semisama.app.base.BaseActivity
 import id.semisama.app.databinding.ActivityLoginBinding
@@ -73,17 +74,17 @@ class ActivityLogin : BaseActivity(), ViewModelLogin.Bridge {
     private fun initObserver(){
         val owner = this
         viewModel.apply {
-            dataAuth.observe(owner, {
+            dataAuth.observe(owner) {
                 cache.set(authTemps, it)
                 viewModel.requestFcmToken()
-            })
+            }
         }
-        viewModel.email.observe(this, {
+        viewModel.email.observe(this) {
             viewModel.checkButton()
-        })
-        viewModel.password.observe(this,  {
+        }
+        viewModel.password.observe(this) {
             viewModel.checkButton()
-        })
+        }
     }
 
 
@@ -116,7 +117,6 @@ class ActivityLogin : BaseActivity(), ViewModelLogin.Bridge {
     override fun next() {
         onBackPressed()
     }
-
 
     override fun showSnackbar(message: String?) {
         binding.container.snackbar(message)

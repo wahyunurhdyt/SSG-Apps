@@ -70,14 +70,10 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
         super.onResume()
         fetchLocation()
         currentActivity = home
-        if(::binding.isInitialized) {
+        if (::binding.isInitialized) {
             binding.mvMain.onResume()
+            checkLocation("onResume")
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if(::binding.isInitialized) binding.mvMain.onDestroy()
     }
 
     override fun onCreateView(
@@ -111,8 +107,6 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     }
 
     private fun loadData() {
-        fetchLocation()
-        checkLocation("loadData")
         viewModel.getBanners()
         viewModel.getCategories()
     }
