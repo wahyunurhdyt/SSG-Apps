@@ -24,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
+import id.semisama.app.BuildConfig
 import id.semisama.app.R
 import id.semisama.app.adapter.Adapter
 import id.semisama.app.adapter.ViewPagerAdapter
@@ -309,22 +310,27 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     }
 
     private fun receivedMessageFromSocket() {
-        socket = IO.socket("https://io-dev.semisama.id")
+        socket = IO.socket(
+            BuildConfig.BASE_URL_SOCKET,
+            IO.Options().apply {
+                reconnection = true
+                forceNew = true
+                extraHeaders = mutableMapOf(Pair("X-Api-Key", listOf(BuildConfig.API_KEY)))
+            }
+        )
 
         val region = SocketRegion(tempRegion?.id)
 
-//        socket.emit("receiveDriverLocation", "Data:${Gson().toJson(region)}")
         socket.on("region_${tempRegion?.id}", onNewMessage).emit("receiveDriverLocation", Gson().toJson(region))
         socket.connect()
             .on(Socket.EVENT_CONNECT) {
                 Log.d("SOCKET_STATUS", "Socket Connected")
             }
             .on(Socket.EVENT_DISCONNECT) {
-                Log.d("SOCKET_STATUS", "NoT Connect")
+                Log.d("SOCKET_STATUS", "Not Connect")
             }
             .on(Socket.EVENT_CONNECT_ERROR) {
-                Log.d("SOCKET_STATUS", "Error Connect")
-                Log.d("SOCKET_STATUS", Gson().toJson(it))
+                Log.d("SOCKET_STATUS", "Error Connect = ${Gson().toJson(it)}")
             }
 
     }
