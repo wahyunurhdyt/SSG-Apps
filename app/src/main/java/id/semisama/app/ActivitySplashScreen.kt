@@ -3,17 +3,17 @@ package id.semisama.app
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import com.google.firebase.messaging.FirebaseMessaging
+import android.os.Looper
 import id.semisama.app.api.manager.ManagerFirebase
 import id.semisama.app.base.BaseActivity
 import id.semisama.app.ui.navigation.ActivityNavigation
-import id.semisama.app.utilily.*
 import id.semisama.app.utilily.Constant.authTemps
 import id.semisama.app.utilily.Constant.boardingTemps
 import id.semisama.app.utilily.Constant.firebaseTemps
 import id.semisama.app.utilily.Constant.getAuth
-import id.semisama.app.utilily.Constant.getRegion
-import id.semisama.app.utilily.Constant.regionTemps
+import id.semisama.app.utilily.launchNewActivity
+import id.semisama.app.utilily.tempAuth
+import id.semisama.app.utilily.tempRegion
 
 @SuppressLint("CustomSplashScreen")
 class ActivitySplashScreen : BaseActivity() {
@@ -24,24 +24,20 @@ class ActivitySplashScreen : BaseActivity() {
         setContentView(R.layout.activity_splash_screen)
 
         val auth = cache.get(authTemps)
-        val region = cache.get(regionTemps)
-        if (!auth.isNullOrEmpty()){
+        if (!auth.isNullOrEmpty()) {
             val data = getAuth(auth)
             tempAuth = data
         }
-        if (!region.isNullOrEmpty()){
-            val data = getRegion(region)
-            tempRegion = data
-            tempAddress = data.name!!
-        }
 
-        if (cache.get(firebaseTemps) == null){
+        tempRegion = null
+
+        if (cache.get(firebaseTemps) == null) {
             ManagerFirebase.subscribeToAllDevices()
             ManagerFirebase.subscribeToAndroidDevices()
             cache.set(firebaseTemps, true)
         }
 
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             startNextActivity()
         }, 1000)
     }

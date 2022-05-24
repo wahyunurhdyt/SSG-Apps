@@ -21,11 +21,11 @@ class Cache {
     fun destroy() { this.sharePref = null }
 
     fun <T> set(name: String, value: T) {
-        if (name == authTemps){
+        if (name == authTemps) {
             tempAuth = value as DataAuth
-        }else if(name == regionTemps){
+        } else if (name == regionTemps) {
             val data = value as Region
-            tempAddress = data.name!!
+            tempAddress = data.name ?: ""
             tempRegion = data
         }
         this.sharePref?.let {
@@ -38,7 +38,7 @@ class Cache {
     }
 
     fun delete(name: String) {
-        if (name == authTemps){
+        if (name == authTemps) {
             tempAuth = null
         }
         this.sharePref?.let {

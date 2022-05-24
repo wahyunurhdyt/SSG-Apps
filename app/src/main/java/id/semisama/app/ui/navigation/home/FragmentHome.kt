@@ -1,13 +1,12 @@
 package id.semisama.app.ui.navigation.home
 
 import android.annotation.SuppressLint
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.sip.SipAudioCall
 import android.os.Bundle
-import android.os.Handler
 import android.text.SpannableString
-import android.util.JsonReader
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,13 +24,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import id.semisama.app.BuildConfig
 import id.semisama.app.R
 import id.semisama.app.adapter.Adapter
 import id.semisama.app.adapter.ViewPagerAdapter
 import id.semisama.app.api.data.*
-import id.semisama.app.api.data.Region
 import id.semisama.app.base.Application
 import id.semisama.app.base.BaseFragment
 import id.semisama.app.databinding.FragmentHomeBinding
@@ -53,9 +49,6 @@ import io.socket.emitter.Emitter
 import org.json.JSONException
 import org.json.JSONObject
 import org.kodein.di.generic.instance
-import java.util.ArrayList
-
-
 
 
 class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
@@ -79,7 +72,6 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
         currentActivity = home
         if(::binding.isInitialized) {
             binding.mvMain.onResume()
-            checkLocation()
         }
     }
 
@@ -112,7 +104,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
         super.onViewCreated(view, savedInstanceState)
         initObserver()
         initRefresh()
-        if (!tempFragmenHasLoadedData){
+        if (!tempFragmenHasLoadedData) {
             loadData()
             tempFragmenHasLoadedData = true
         }
@@ -120,12 +112,12 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
 
     private fun loadData() {
         fetchLocation()
-        checkLocation()
+        checkLocation("loadData")
         viewModel.getBanners()
         viewModel.getCategories()
     }
 
-    private fun initRefresh(){
+    private fun initRefresh() {
         binding.srlLayout.setOnRefreshListener {
             loadData()
             binding.srlLayout.isRefreshing = false
@@ -133,35 +125,34 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     }
 
     private fun initObserver() {
-        val owner = this
         viewModel.apply {
-            banners.observe(owner, {
+            banners.observe(viewLifecycleOwner) {
                 showBanner(it)
                 updateBannerIndicator(it)
-            })
-            product.observe(owner, {
+            }
+            product.observe(viewLifecycleOwner) {
                 showProducts(it.data.results)
-            })
-            productRecommend.observe(owner, {
+            }
+            productRecommend.observe(viewLifecycleOwner) {
                 showProductRecommend(it.data.results)
-            })
-            categories.observe(owner, {
+            }
+            categories.observe(viewLifecycleOwner) {
                 showCategory(it)
-            })
-            driverLocation.observe(owner, {
+            }
+            driverLocation.observe(viewLifecycleOwner) {
                 if (viewModel.routes.value != null) {
                     loadRoute(it, viewModel.routes.value?.data!!)
                 }
-            })
-            routes.observe(owner, {
+            }
+            routes.observe(viewLifecycleOwner) {
                 loadRoute(viewModel.driverLocation.value!!, it.data)
-            })
+            }
         }
     }
 
     private fun showBanner(data: MutableList<Banner>) {
         this.adapterBanner = ViewPagerAdapter(
-            context!!,
+            requireContext(),
             R.layout.item_banner,
             listOf()
         ) { itemView, item, _ ->
@@ -200,11 +191,11 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             val ivIndicator = ImageView(context)
             if (i == currentBanner) {
                 ivIndicator.setImageDrawable(
-                    ContextCompat.getDrawable(context!!,
+                    ContextCompat.getDrawable(requireContext(),
                         R.drawable.banner_active))
             } else {
                 ivIndicator.setImageDrawable(
-                    ContextCompat.getDrawable(context!!,
+                    ContextCompat.getDrawable(requireContext(),
                         R.drawable.banner_inactive))
             }
 
@@ -212,7 +203,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            layoutParams.setMargins(context!!.getPx(1), 0, context!!.getPx(1), 0)
+            layoutParams.setMargins(requireContext().getPx(1), 0, requireContext().getPx(1), 0)
             binding.llContainerBannerIndicator.addView(ivIndicator, layoutParams)
         }
     }
@@ -230,7 +221,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 tempCategoryId = item.id
                 tempCategoryName = item.name
                 val fragment = FragmentCategory()
-                val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+                val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
                 transaction.replace(R.id.fMain, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
@@ -283,36 +274,48 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
         adapterRecommend.data = data
     }
 
-    private fun checkLocation(){
+    private fun checkLocation(from: String) {
+        Log.e("checkLocation", "from = $from")
         val region = cache.get(regionTemps)
-        if (region.isNullOrEmpty()){
+        if (region.isNullOrEmpty()) {
+            Log.e("checkLocation", "0")
             viewModel.loadingCheckLocationVisibility.postValue(View.VISIBLE)
-            if (tempAddress == Application.getString(R.string.labelFailedLoadingLocation)){
+            if (tempAddress == Application.getString(R.string.labelFailedLoadingLocation)) {
+                Log.e("checkLocation", "1")
                 viewModel.getRegencies()
-            }else{
+            } else {
+                Log.e("checkLocation", "2")
                 viewModel.checkLocation()
             }
-        }else{
+        } else {
+            Log.e("checkLocation", "3")
             if (stateCheckLocation) {
-                if (tempRegion?.isSupported!! && tempAuth != null) {
+                Log.e("checkLocation", "4")
+                Log.e("checkLocation", "tempRegion?.isSupported = ${tempRegion?.isSupported}")
+                Log.e("checkLocation", "tempRegion != null => ${tempRegion != null}")
+                Log.e("checkLocation", "tempAuth != null => ${tempAuth != null}")
+                if (tempRegion != null) receivedMessageFromSocket().also { Log.e("checkLocation", "5") }
+                if (tempRegion?.isSupported == true && tempAuth != null) {
+                    Log.e("checkLocation", "6")
                     viewModel.requestLocationVisibility.postValue(View.VISIBLE)
                     viewModel.getRoutes()
-                    receivedMessageFromSocket()
                 } else {
+                    Log.e("checkLocation", "7")
                     viewModel.requestLocationVisibility.postValue(View.GONE)
                 }
                 viewModel.loadingCheckLocationVisibility.postValue(View.GONE)
                 viewModel.getProductSelected()
                 viewModel.getProductRecommend()
-            }else{
+            } else {
+                Log.e("checkLocation", "8")
                 stateCheckLocation = true
                 viewModel.checkLocation()
             }
         }
     }
 
-    private fun receivedMessageFromSocket(){
-        socket = IO.socket("https://io.dev.semisama.id")
+    private fun receivedMessageFromSocket() {
+        socket = IO.socket("https://io-dev.semisama.id")
 
         val region = SocketRegion(tempRegion?.id)
 
@@ -343,7 +346,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                     val lat = message.location.coordinates!![1]
                     val lng = message.location.coordinates!![0]
                     val driverLocation = LatLng(lat, lng)
-                    if (viewModel.routes.value != null){
+                    if (viewModel.routes.value != null) {
                         viewModel.driverLocation.postValue(driverLocation)
                     }
                     println("location driver : $lat, $lng")
@@ -361,7 +364,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
         map = p0
     }
 
-    private fun loadRoute(driverLocation: LatLng, data: MutableList<Route>){
+    private fun loadRoute(driverLocation: LatLng, data: MutableList<Route>) {
         map?.clear()
 
         //DriverMarker
@@ -393,7 +396,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             val name = data[i].name
             val markerIcon = Bitmap.createScaledBitmap(bitmap, 72, 72, false)
 
-            if (size > 1 && i < (size-1)){
+            if (size > 1 && i < (size-1)) {
                 addPolyline(position, LatLng(data[i+1].location?.coordinates!![1], data[i+1].location?.coordinates!![0]))
             }
 
@@ -431,7 +434,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
 
     }
 
-    private fun addPolyline(start: LatLng, end: LatLng){
+    private fun addPolyline(start: LatLng, end: LatLng) {
         map?.addPolyline(PolylineOptions().add(start, end).width(5f).color(Color.BLACK).geodesic(true))
     }
 
@@ -441,7 +444,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             dialog.setCanceledOnTouchOutside(false)
             val appName = SpannableString(
                 " ${getString(R.string.apps_name)}.").also {
-                it.recolorAndBold(context!!, R.color.black_70)
+                it.recolorAndBold(requireContext(), R.color.black_70)
             }
             val tvInfo = itemView.findViewById<TextView>(R.id.tvInfo)
             val tvChooseLocation = itemView.findViewById<TextView>(R.id.tvChooseLocation)
@@ -450,7 +453,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             val chooseLocation = itemView.findViewById<AutoCompleteTextView>(R.id.chooseLocation)
             val btnConfirm = itemView.findViewById<Button>(R.id.btnConfirm)
 
-            if (isSupported){
+            if (isSupported) {
                 tvInfo.text = Application.getStringArray(R.array.labelInfoAvailabelLocation)[0]
                 tvInfo.append(appName)
                 tvChooseLocation.text = Application.getStringArray(R.array.labelInfoAvailabelLocation)[1]
@@ -460,34 +463,34 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 cache.set(regionTemps, Region(data?.name, data?.id, isSupported))
                 if (tempAuth != null) {
                     viewModel.requestLocationVisibility.postValue(View.VISIBLE)
-                }else{
+                } else {
                     viewModel.requestLocationVisibility.postValue(View.GONE)
                 }
-            }else{
+            } else {
                 tvInfo.text = Application.getStringArray(R.array.labelInfoUnavailabelLocation)[0]
                 tvInfo.append(appName)
                 tvChooseLocation.text = Application.getStringArray(R.array.labelInfoUnavailabelLocation)[1]
                 tvLocation.visibility = View.GONE
 
                 val location = ArrayList<String?>()
-                for (i in 0 until regencies!!.size){
+                for (i in 0 until regencies!!.size) {
                     location.add(regencies[i].name)
                 }
 
                 val adapter: ArrayAdapter<String?> = ArrayAdapter(
-                    context!!,
+                    requireContext(),
                     R.layout.dropdown,
                     location
                 )
 
                 chooseLocation.setAdapter(adapter)
                 chooseLocation.threshold = 1
-                chooseLocation.onItemClickListener = AdapterView.OnItemClickListener{
+                chooseLocation.onItemClickListener = AdapterView.OnItemClickListener {
                         _, _, _, _ ->
-                    val data = regencies.find {
+                    val d = regencies.find {
                         it.name == chooseLocation.text.toString()
                     }
-                    cache.set(regionTemps, Region(data?.name, data?.id, isSupported))
+                    cache.set(regionTemps, Region(d?.name, d?.id, isSupported))
                     btnConfirm.isEnabled = true
                 }
 
@@ -521,12 +524,12 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
             }
 
             val location = ArrayList<String?>()
-            for (i in 0 until regencies!!.size){
+            for (i in 0 until regencies!!.size) {
                 location.add(regencies[i].name)
             }
 
             val adapter: ArrayAdapter<String?> = ArrayAdapter(
-                context!!,
+                requireContext(),
                 R.layout.dropdown,
                 location
             )
@@ -548,7 +551,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
 
             btnConfirm.setOnClickListener {
                 viewModel.city.postValue(tempAddress)
-                checkLocation()
+                checkLocation("btnConfirm")
                 dialog.dismiss()
             }
         }
@@ -557,7 +560,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     override fun viewAllProduct(isSelected: Boolean?) {
         tempSelectedProduct = isSelected
         val fragment = FragmentProduct()
-        val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+        val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.fMain, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
