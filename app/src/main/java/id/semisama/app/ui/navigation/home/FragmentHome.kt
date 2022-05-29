@@ -216,7 +216,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
                 tempCategoryId = item.id
                 tempCategoryName = item.name
                 val fragment = FragmentCategory()
-                val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
+                val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
                 transaction.replace(R.id.fMain, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
