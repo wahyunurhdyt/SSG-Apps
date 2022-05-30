@@ -560,7 +560,7 @@ class FragmentHome : BaseFragment(), OnMapReadyCallback, ViewModelHome.Bridge {
     override fun viewAllProduct(isSelected: Boolean?) {
         tempSelectedProduct = isSelected
         val fragment = FragmentProduct()
-        val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
+        val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
         transaction.replace(R.id.fMain, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
